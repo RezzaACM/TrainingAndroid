@@ -13,6 +13,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONException;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +32,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        rest_class = new RestProcess();
 
         final EditText username = (EditText)findViewById(R.id.username);
         final EditText password = (EditText)findViewById(R.id.password);
@@ -51,47 +55,68 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Intent main_activity = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(main_activity);
+                    loginProcess(view);
                 }
             }
         });
 
     }
-    private void loginProcess (final View view){
-        HashMap<String, String> apiData = new HashMap<>();
+    public void loginProcess(final View view) {
+
+        HashMap<String, String> apiData = new HashMap<String, String>();
         apiData = rest_class.apiSetting();
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
         String base_url;
 
-        base_url = apiData.get("str_ws_addr") + "api/training/auth/format/json";
+        base_url = apiData.get("str_ws_addr") + "/api/training/auth/format/json";
         params.put("var_cell_phone", var_username);
         params.put("var_password", var_password);
 
-        client.setBasicAuth(apiData.get("str_ws_user"),apiData.get("str_ws_pass"));
+        client.setBasicAuth(apiData.get("str_ws_user"), apiData.get("str_ws_pass"));
         client.post(base_url, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, cz.msebera.android.httpclient.Header[] headers, byte[] responseBody) {
-//                public void onSuccess(int statusCode, cz.msbera.andorid.httpclient.Header[]headers, byte[])
                 String resp_content = "";
                 try {
                     resp_content = new String(responseBody, "UTF-8");
-                }catch (UnsupportedEncodingException e){
+                } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-                try{
+                try {
                     displayLogin(view, resp_content);
-                }catch (Throwable t){
-                    Toast.makeText(LoginActivity.this, "Koneksi Gagal",Toast.LENGTH_SHORT).show();
+                } catch (Throwable t) {
+                    Toast.makeText(LoginActivity.this, "Koneksi Gagal !", Toast.LENGTH_SHORT).show();
                 }
+
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(LoginActivity.this, "Koneksi Gagal !", Toast.LENGTH_SHORT).show();
 
             }
         });
     }
 
+    private void displayLogin(View view, String resp_content) {
+        try {
+            arrayLogin = rest_class.getJsonData(resp_content);
+            if (arrayLogin.get(0).get("var_result").equals("1")) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            } else if (arrayLogin.get(0).get("var_result").equals("0")) {
+
+                Toast.makeText(LoginActivity.this,"Koneksi Gagal !" , Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            Toast.makeText(LoginActivity.this, "Koneksi Gagal !", Toast.LENGTH_SHORT).show();
+        }
     }
+
+
+}
 
 

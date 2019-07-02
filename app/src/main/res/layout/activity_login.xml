@@ -53,6 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Masukkan username anda"
+        android:inputType="number"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         />
@@ -71,7 +72,7 @@
         android:hint="Masukkan password anda"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:inputType="textPassword"
+        android:inputType="numberPassword"
         />
     <Button
         android:id="@+id/btnLogin"

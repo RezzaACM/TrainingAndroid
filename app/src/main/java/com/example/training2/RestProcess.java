@@ -11,7 +11,7 @@ public class RestProcess {
 
     public HashMap apiSetting() {
         HashMap<String, String> apiData = new HashMap<String, String>();
-        apiData.put("Str_ws_addr", "http://caiman.multiintisarana.id:2095/ws_training");
+        apiData.put("str_ws_addr", "http://caiman.multiintisarana.id:2095/ws_training");
         apiData.put("str_ws_user", "apitraining");
         apiData.put("str_ws_pass", "password");
         return apiData;
