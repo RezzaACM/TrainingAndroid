@@ -53,8 +53,8 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (var_password.length() < 6 ) {
                     Toast.makeText(LoginActivity.this, (R.string.toast_password), Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent main_activity = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(main_activity);
+//                    Intent main_activity = new Intent(LoginActivity.this, MainActivity.class);
+//                    startActivity(main_activity);
                     loginProcess(view);
                 }
             }
